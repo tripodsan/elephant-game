@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Gobals",
 "language": "GDScript",
 "path": "res://scripts/globals.gd"
+}, {
+"base": "Node2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://scripts/player.gd"
 } ]
 _global_script_class_icons={
-"Gobals": ""
+"Gobals": "",
+"Player": ""
 }
 
 [application]
@@ -30,6 +36,7 @@ Globals="*res://scripts/globals.gd"
 
 [display]
 
+window/size/width=1280
 window/size/height=768
 window/stretch/aspect="keep"
 
@@ -71,4 +78,5 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 2d/snapping/use_gpu_pixel_snap=true
+environment/default_clear_color=Color( 0.2, 0.2, 0.2, 1 )
 environment/default_environment="res://default_env.tres"
