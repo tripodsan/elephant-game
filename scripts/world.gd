@@ -1,7 +1,12 @@
 extends Node2D
 
+## the current level tilemap
 onready var level:TileMap = $room
 
+## the current level background
+onready var background:TileMap = $background
+
+## the player node
 onready var player:Player = $player
 
 const TILE_WALL = 1
@@ -12,9 +17,18 @@ var targets = {}
 
 var moves:int = 0 setget set_moves
 
+## tween used to animate boxes
+var move_tween:Tween
+
+## flag indicating if level is complete
+var level_complete:bool
+
 func _ready() -> void:
   print('tilemap rect ', level.get_used_rect())
   generate_sprites()
+  move_tween = Tween.new()
+  assert(!move_tween.connect('tween_all_completed', self, 'box_move_completed'))
+  add_child(move_tween)
   self.moves = 0
 
 func generate_sprites():
@@ -44,8 +58,14 @@ func generate_sprites():
         boxes.push_back(s)
 
 func player_move(dir:int):
+  if level_complete || player.is_moving():
+    return
   player.set_dir(dir)
   var newPos = player.pos + Gobals.DIRS[dir]
+  # check if background is not empty
+  if background.get_cellv(newPos) == -1:
+    return
+  # get level cell
   var t = level.get_cellv(newPos)
   if t == TILE_WALL:
     return
@@ -56,9 +76,11 @@ func player_move(dir:int):
   if f:
     # box moved
     print('moved box to %s', f)
-    f.transform.origin = level.map_to_world(f.pos)
+    move_tween.interpolate_property(f, 'position', f.transform.origin,
+      level.map_to_world(f.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+    move_tween.start()
 
-  player.pos = newPos
+  player.move_to(newPos)
   print('moved to %s facing %d. tile is %d' % [player.pos, dir, level.get_cellv(player.pos)])
 
 func box_move(f:Box, dir:int)->bool:
@@ -92,8 +114,12 @@ func box_move(f:Box, dir:int)->bool:
       return true
 
   print('level complete!')
-  Globals.emit_signal('level_complete', moves)
+  level_complete = true
   return true
+
+func box_move_completed()->void:
+  if level_complete:
+    Globals.emit_signal('level_complete', moves)
 
 func _input(event:InputEvent)->void:
   if event.is_action_pressed('move_up'):
