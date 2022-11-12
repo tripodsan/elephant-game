@@ -36,8 +36,11 @@ Globals="*res://scripts/globals.gd"
 
 [display]
 
-window/size/width=1280
-window/size/height=768
+window/size/width=1400
+window/size/height=1000
+window/dpi/allow_hidpi=true
+window/per_pixel_transparency/allowed=true
+window/per_pixel_transparency/enabled=true
 window/stretch/aspect="keep"
 
 [gui]

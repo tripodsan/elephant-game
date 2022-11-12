@@ -1,10 +1,10 @@
 extends Node2D
 
 ## the current level tilemap
-onready var level:TileMap = $room
+onready var level:TileMap = $room1
 
 ## the current level background
-onready var background:TileMap = $background
+onready var background:TileMap = $background1
 
 ## the player node
 onready var player:Player = $player
@@ -15,6 +15,7 @@ var boxes:Array = []
 
 var targets = {}
 
+## number of box moves
 var moves:int = 0 setget set_moves
 
 ## tween used to animate boxes
@@ -23,11 +24,15 @@ var move_tween:Tween
 ## flag indicating if level is complete
 var level_complete:bool
 
+## next move (if user clicks/moves before the animation finished
+var next_move:int = -1
+
 func _ready() -> void:
   print('tilemap rect ', level.get_used_rect())
   generate_sprites()
   move_tween = Tween.new()
-  assert(!move_tween.connect('tween_all_completed', self, 'box_move_completed'))
+  assert(!move_tween.connect('tween_all_completed', self, '_box_move_completed'))
+  assert(!player.connect('move_completed', self, '_player_move_completed'))
   add_child(move_tween)
   self.moves = 0
 
@@ -48,7 +53,7 @@ func generate_sprites():
       s.centered = false
       s.region_enabled = true
       s.region_rect = ts.tile_get_region(id)
-      s.offset = ts.tile_get_texture_offset(id) - Vector2(32, 0)
+      s.offset = ts.tile_get_texture_offset(id) - Vector2(96, 0)
       s.transform.origin = level.map_to_world(pos)
       s.z_index = ts.tile_get_z_index(id)
       level.add_child(s)
@@ -58,8 +63,12 @@ func generate_sprites():
         boxes.push_back(s)
 
 func player_move(dir:int):
-  if level_complete || player.is_moving():
+  if level_complete:
     return
+  if player.is_moving():
+    next_move = dir
+    return
+  next_move = -1
   player.set_dir(dir)
   var newPos = player.pos + Gobals.DIRS[dir]
   # check if background is not empty
@@ -75,20 +84,21 @@ func player_move(dir:int):
     return
   if f:
     # box moved
-    print('moved box to %s', f)
+    #print('moved box to %s', f)
     move_tween.interpolate_property(f, 'position', f.transform.origin,
       level.map_to_world(f.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
     move_tween.start()
 
   player.move_to(newPos)
-  print('moved to %s facing %d. tile is %d' % [player.pos, dir, level.get_cellv(player.pos)])
+  #print('moved to %s facing %d. tile is %d' % [player.pos, dir, level.get_cellv(player.pos)])
 
 func box_move(f:Box, dir:int)->bool:
   # check that all points of the box can move
   for p in f.positions:
     var newPos = p + Globals.DIRS[dir]
-    var t = level.get_cellv(newPos)
-    if t == TILE_WALL:
+    if level.get_cellv(newPos) == TILE_WALL:
+      return false
+    if background.get_cellv(newPos) == -1:
       return false
     var other = get_box(newPos)
     if other && other != f:
@@ -117,9 +127,13 @@ func box_move(f:Box, dir:int)->bool:
   level_complete = true
   return true
 
-func box_move_completed()->void:
+func _box_move_completed()->void:
   if level_complete:
     Globals.emit_signal('level_complete', moves)
+
+func _player_move_completed()->void:
+  if next_move >= 0:
+    player_move(next_move)
 
 func _input(event:InputEvent)->void:
   if event.is_action_pressed('move_up'):

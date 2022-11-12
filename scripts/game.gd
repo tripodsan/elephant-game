@@ -23,6 +23,7 @@ func load_level(lvl:int):
     c.queue_free()
   var scn = LEVELS[lvl].instance()
   board.add_child(scn)
+  $canvas/levelComplete.visible = false
   Globals.emit_signal('level_loaded', lvl)
 
 func _on_btnRestart_pressed() -> void:

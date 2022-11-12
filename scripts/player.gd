@@ -10,6 +10,11 @@ onready var world := get_parent()
 
 onready var move_tween:Tween = $movement
 
+signal move_completed
+
+func _ready():
+  assert(!move_tween.connect('tween_all_completed', self, '_move_complete'))
+
 func set_dir(v:int):
   dir = v
   for s in $sprite.get_children():
@@ -18,6 +23,9 @@ func set_dir(v:int):
 
 func is_moving()->bool:
   return move_tween.is_active()
+
+func _move_complete():
+  emit_signal('move_completed')
 
 func move_to(v:Vector2):
   pos = v

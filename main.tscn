@@ -18,19 +18,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="ColorRect" type="ColorRect" parent="canvas/levelComplete"]
-margin_right = 1280.0
-margin_bottom = 768.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.768627 )
 
 [node name="CenterContainer" type="CenterContainer" parent="canvas/levelComplete"]
-margin_right = 1280.0
-margin_bottom = 768.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="Label" type="Label" parent="canvas/levelComplete/CenterContainer"]
-margin_left = 442.0
-margin_top = 342.0
-margin_right = 837.0
-margin_bottom = 426.0
+margin_left = 502.0
+margin_top = 458.0
+margin_right = 897.0
+margin_bottom = 542.0
 theme = ExtResource( 5 )
 text = "Level Complete!"
 
@@ -47,11 +47,11 @@ custom_constants/margin_left = 20
 
 [node name="GridContainer" type="VBoxContainer" parent="canvas/game_screen/hud"]
 margin_left = 20.0
-margin_right = 1260.0
-margin_bottom = 768.0
+margin_right = 1380.0
+margin_bottom = 1000.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="canvas/game_screen/hud/GridContainer"]
-margin_right = 1240.0
+margin_right = 1360.0
 margin_bottom = 90.0
 
 [node name="labMoves" type="Label" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
@@ -63,21 +63,21 @@ text = "Moves: 0"
 
 [node name="spacer" type="Control" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
 margin_left = 225.0
-margin_right = 1047.0
+margin_right = 1167.0
 margin_bottom = 90.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 
 [node name="btnRestart" type="Button" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_left = 1051.0
-margin_right = 1166.0
+margin_left = 1171.0
+margin_right = 1286.0
 margin_bottom = 90.0
 theme = ExtResource( 5 )
 text = "RST"
 
 [node name="spacer2" type="VSeparator" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_left = 1170.0
-margin_right = 1190.0
+margin_left = 1290.0
+margin_right = 1310.0
 margin_bottom = 90.0
 grow_horizontal = 2
 size_flags_horizontal = 0
@@ -85,23 +85,23 @@ custom_constants/separation = 20
 custom_styles/separator = SubResource( 1 )
 
 [node name="btnMenu" type="Button" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_left = 1194.0
-margin_right = 1240.0
+margin_left = 1314.0
+margin_right = 1360.0
 margin_bottom = 90.0
 theme = ExtResource( 5 )
 text = "||"
 
 [node name="spacer" type="Control" parent="canvas/game_screen/hud/GridContainer"]
 margin_top = 94.0
-margin_right = 1240.0
-margin_bottom = 680.0
+margin_right = 1360.0
+margin_bottom = 912.0
 grow_vertical = 2
 size_flags_vertical = 3
 
 [node name="labLevel" type="Label" parent="canvas/game_screen/hud/GridContainer"]
-margin_top = 684.0
-margin_right = 1240.0
-margin_bottom = 768.0
+margin_top = 916.0
+margin_right = 1360.0
+margin_bottom = 1000.0
 theme = ExtResource( 5 )
 text = "Level 1	"
 
