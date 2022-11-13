@@ -2,13 +2,15 @@ extends Node2D
 
 var level0 = load('res://levels/level0.tscn')
 var level1 = load('res://levels/level1.tscn')
+var level2 = load('res://levels/level2.tscn')
 
 var LEVELS = [
   level0,
   level1,
+  level2,
 ]
 
-var current_level = 0
+var current_level
 
 onready var board = $board
 
@@ -31,3 +33,8 @@ func _on_btnRestart_pressed() -> void:
 
 func _level_complete(moves:int):
   $canvas/levelComplete.visible = true
+  $canvas/levelComplete.grab_focus()
+
+
+func _on_btnNext_pressed() -> void:
+  load_level((current_level + 1) % LEVELS.size())

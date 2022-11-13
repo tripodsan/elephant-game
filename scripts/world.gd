@@ -9,7 +9,7 @@ onready var background:TileMap = $background1
 ## the player node
 onready var player:Player = $player
 
-const TILE_WALL = 1
+const TILE_WALL = 11
 
 var boxes:Array = []
 

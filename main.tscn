@@ -12,28 +12,6 @@ script = ExtResource( 4 )
 
 [node name="canvas" type="CanvasLayer" parent="."]
 
-[node name="levelComplete" type="Control" parent="canvas"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="ColorRect" type="ColorRect" parent="canvas/levelComplete"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0, 0, 0, 0.768627 )
-
-[node name="CenterContainer" type="CenterContainer" parent="canvas/levelComplete"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="Label" type="Label" parent="canvas/levelComplete/CenterContainer"]
-margin_left = 502.0
-margin_top = 458.0
-margin_right = 897.0
-margin_bottom = 542.0
-theme = ExtResource( 5 )
-text = "Level Complete!"
-
 [node name="game_screen" type="Control" parent="canvas"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -105,8 +83,45 @@ margin_bottom = 1000.0
 theme = ExtResource( 5 )
 text = "Level 1	"
 
+[node name="levelComplete" type="Control" parent="canvas"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="canvas/levelComplete"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.768627 )
+
+[node name="CenterContainer" type="CenterContainer" parent="canvas/levelComplete"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="canvas/levelComplete/CenterContainer"]
+margin_left = 502.0
+margin_top = 404.0
+margin_right = 897.0
+margin_bottom = 595.0
+custom_constants/separation = 17
+
+[node name="Label" type="Label" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+margin_right = 395.0
+margin_bottom = 84.0
+theme = ExtResource( 5 )
+text = "Level Complete!"
+
+[node name="btnNext" type="Button" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+margin_left = 60.0
+margin_top = 101.0
+margin_right = 334.0
+margin_bottom = 191.0
+size_flags_horizontal = 4
+theme = ExtResource( 5 )
+text = "Next Level"
+
 [node name="board" type="Node2D" parent="."]
 
 [node name="level0" parent="board" instance=ExtResource( 1 )]
 
 [connection signal="pressed" from="canvas/game_screen/hud/GridContainer/HBoxContainer/btnRestart" to="." method="_on_btnRestart_pressed"]
+[connection signal="pressed" from="canvas/levelComplete/CenterContainer/VBoxContainer/btnNext" to="." method="_on_btnNext_pressed"]
