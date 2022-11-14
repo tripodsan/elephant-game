@@ -16,7 +16,7 @@ onready var board = $board
 
 func _ready() -> void:
   assert(!Globals.connect('level_complete', self, '_level_complete'))
-  load_level(0)
+  load_level(2)
 
 func load_level(lvl:int):
   current_level = lvl
