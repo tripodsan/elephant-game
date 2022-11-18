@@ -43,5 +43,3 @@ position = Vector2( -6, -12 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 380, -10, 140, 160 )
-
-[node name="movement" type="Tween" parent="."]

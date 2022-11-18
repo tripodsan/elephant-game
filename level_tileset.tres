@@ -165,14 +165,8 @@
 21/shape_offset = Vector2( 0, 0 )
 21/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 21/shape_one_way = false
-21/shape_one_way_margin = 1.0
-21/shapes = [ {
-"autotile_coord": Vector2( 0, 0 ),
-"one_way": false,
-"one_way_margin": 1.0,
-"shape": null,
-"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
-} ]
+21/shape_one_way_margin = 0.0
+21/shapes = [  ]
 21/z_index = 1
 22/name = "bed 2x2"
 22/texture = ExtResource( 3 )

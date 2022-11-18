@@ -8,31 +8,14 @@ var pos:Vector2 = Vector2.ZERO setget set_pos
 
 onready var world := get_parent()
 
-onready var move_tween:Tween = $movement
-
-signal move_completed
-
-func _ready():
-  assert(!move_tween.connect('tween_all_completed', self, '_move_complete'))
-
 func set_dir(v:int):
   dir = v
   for s in $sprite.get_children():
     s.visible = v == 0
     v -= 1
 
-func is_moving()->bool:
-  return move_tween.is_active()
-
-func _move_complete():
-  emit_signal('move_completed')
-
 func move_to(v:Vector2):
   pos = v
-  move_tween.interpolate_property(self, 'position',
-  transform.origin, world.grid2cart(pos), 0.4,
-  Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
-  move_tween.start()
 
 func set_pos(v:Vector2):
   pos = v
