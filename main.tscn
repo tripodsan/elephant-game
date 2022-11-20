@@ -1,9 +1,21 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://levels/level0.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/hud.gd" type="Script" id=2]
+[ext_resource path="res://assets/ui/restart-pres.png" type="Texture" id=3]
 [ext_resource path="res://scripts/game.gd" type="Script" id=4]
 [ext_resource path="res://themes/hud.tres" type="Theme" id=5]
+[ext_resource path="res://assets/ui/restart-hov.png" type="Texture" id=6]
+[ext_resource path="res://assets/ui/restart-def.png" type="Texture" id=7]
+[ext_resource path="res://assets/ui/restart-dis.png" type="Texture" id=8]
+[ext_resource path="res://assets/ui/menu-def.png" type="Texture" id=9]
+[ext_resource path="res://assets/ui/menu-pres.png" type="Texture" id=10]
+[ext_resource path="res://assets/ui/menu-hov.png" type="Texture" id=11]
+[ext_resource path="res://assets/ui/menu-dis.png" type="Texture" id=12]
+[ext_resource path="res://assets/ui/undo-pres.png" type="Texture" id=13]
+[ext_resource path="res://assets/ui/undo-hov.png" type="Texture" id=14]
+[ext_resource path="res://assets/ui/undo-dis.png" type="Texture" id=15]
+[ext_resource path="res://assets/ui/undo-def.png" type="Texture" id=16]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -15,71 +27,111 @@ script = ExtResource( 4 )
 [node name="game_screen" type="Control" parent="canvas"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 2 )
 
 [node name="hud" type="MarginContainer" parent="canvas/game_screen"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 custom_constants/margin_right = 20
+custom_constants/margin_top = 10
 custom_constants/margin_left = 20
 
 [node name="GridContainer" type="VBoxContainer" parent="canvas/game_screen/hud"]
 margin_left = 20.0
+margin_top = 10.0
 margin_right = 1380.0
 margin_bottom = 1000.0
+mouse_filter = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="canvas/game_screen/hud/GridContainer"]
 margin_right = 1360.0
-margin_bottom = 90.0
+margin_bottom = 102.0
+mouse_filter = 2
 
 [node name="labMoves" type="Label" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_top = 3.0
+margin_top = 9.0
 margin_right = 221.0
-margin_bottom = 87.0
+margin_bottom = 93.0
 theme = ExtResource( 5 )
 text = "Moves: 0"
 
 [node name="spacer" type="Control" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
 margin_left = 225.0
-margin_right = 1167.0
-margin_bottom = 90.0
+margin_right = 1014.0
+margin_bottom = 102.0
 grow_horizontal = 2
+mouse_filter = 2
 size_flags_horizontal = 3
 
-[node name="btnRestart" type="Button" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_left = 1171.0
-margin_right = 1286.0
-margin_bottom = 90.0
+[node name="btnUndo" type="TextureButton" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
+margin_left = 1018.0
+margin_right = 1120.0
+margin_bottom = 102.0
+hint_tooltip = "Undo"
 theme = ExtResource( 5 )
-text = "RST"
+texture_normal = ExtResource( 16 )
+texture_pressed = ExtResource( 13 )
+texture_hover = ExtResource( 14 )
+texture_disabled = ExtResource( 15 )
+stretch_mode = 5
 
-[node name="spacer2" type="VSeparator" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_left = 1290.0
-margin_right = 1310.0
-margin_bottom = 90.0
+[node name="spacer3" type="VSeparator" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
+margin_left = 1124.0
+margin_right = 1134.0
+margin_bottom = 102.0
 grow_horizontal = 2
+mouse_filter = 1
 size_flags_horizontal = 0
-custom_constants/separation = 20
+custom_constants/separation = 10
 custom_styles/separator = SubResource( 1 )
 
-[node name="btnMenu" type="Button" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
-margin_left = 1314.0
-margin_right = 1360.0
-margin_bottom = 90.0
+[node name="btnRestart" type="TextureButton" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
+margin_left = 1138.0
+margin_right = 1240.0
+margin_bottom = 102.0
+hint_tooltip = "Restart"
 theme = ExtResource( 5 )
-text = "||"
+texture_normal = ExtResource( 7 )
+texture_pressed = ExtResource( 3 )
+texture_hover = ExtResource( 6 )
+texture_disabled = ExtResource( 8 )
+stretch_mode = 5
+
+[node name="spacer2" type="VSeparator" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
+margin_left = 1244.0
+margin_right = 1254.0
+margin_bottom = 102.0
+grow_horizontal = 2
+size_flags_horizontal = 0
+custom_constants/separation = 10
+custom_styles/separator = SubResource( 1 )
+
+[node name="btnMenu" type="TextureButton" parent="canvas/game_screen/hud/GridContainer/HBoxContainer"]
+margin_left = 1258.0
+margin_right = 1360.0
+margin_bottom = 102.0
+hint_tooltip = "Menu"
+theme = ExtResource( 5 )
+texture_normal = ExtResource( 9 )
+texture_pressed = ExtResource( 10 )
+texture_hover = ExtResource( 11 )
+texture_disabled = ExtResource( 12 )
+stretch_mode = 5
 
 [node name="spacer" type="Control" parent="canvas/game_screen/hud/GridContainer"]
-margin_top = 94.0
+margin_top = 106.0
 margin_right = 1360.0
-margin_bottom = 912.0
+margin_bottom = 902.0
 grow_vertical = 2
+mouse_filter = 2
 size_flags_vertical = 3
 
 [node name="labLevel" type="Label" parent="canvas/game_screen/hud/GridContainer"]
-margin_top = 916.0
+margin_top = 906.0
 margin_right = 1360.0
-margin_bottom = 1000.0
+margin_bottom = 990.0
 theme = ExtResource( 5 )
 text = "Level 1	"
 
@@ -87,15 +139,18 @@ text = "Level 1	"
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 
 [node name="ColorRect" type="ColorRect" parent="canvas/levelComplete"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 color = Color( 0, 0, 0, 0.768627 )
 
 [node name="CenterContainer" type="CenterContainer" parent="canvas/levelComplete"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="canvas/levelComplete/CenterContainer"]
 margin_left = 502.0
@@ -123,5 +178,6 @@ text = "Next Level"
 
 [node name="level0" parent="board" instance=ExtResource( 1 )]
 
+[connection signal="pressed" from="canvas/game_screen/hud/GridContainer/HBoxContainer/btnUndo" to="." method="_on_btnUndo_pressed"]
 [connection signal="pressed" from="canvas/game_screen/hud/GridContainer/HBoxContainer/btnRestart" to="." method="_on_btnRestart_pressed"]
 [connection signal="pressed" from="canvas/levelComplete/CenterContainer/VBoxContainer/btnNext" to="." method="_on_btnNext_pressed"]

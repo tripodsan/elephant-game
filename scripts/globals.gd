@@ -4,9 +4,13 @@ class_name Gobals
 
 signal moves_changed(moves)
 
+signal history_changed(size)
+
 signal level_loaded(level_nr)
 
 signal level_complete(moves)
+
+signal undo_move()
 
 const GRID_DX := 64
 const GRID_DX2 := 32

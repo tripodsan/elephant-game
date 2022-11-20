@@ -16,7 +16,7 @@ onready var board = $board
 
 func _ready() -> void:
   assert(!Globals.connect('level_complete', self, '_level_complete'))
-  load_level(2)
+  load_level(0)
 
 func load_level(lvl:int):
   current_level = lvl
@@ -38,3 +38,6 @@ func _level_complete(moves:int):
 
 func _on_btnNext_pressed() -> void:
   load_level((current_level + 1) % LEVELS.size())
+
+func _on_btnUndo_pressed() -> void:
+  Globals.emit_signal('undo_move')

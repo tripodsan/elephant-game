@@ -28,6 +28,10 @@ var fast_travel:bool = false
 ## the current move path
 var move_path:Array = []
 
+## the move history
+## @type Array<Move>
+var move_history:Array = []
+
 ## number of box moves
 var moves:int = 0 setget set_moves
 
@@ -38,11 +42,11 @@ var move_tween:Tween
 var level_complete:bool
 
 func _ready() -> void:
-  print('tilemap rect ', level.get_used_rect())
   generate_sprites()
   generate_nav()
   move_tween = Tween.new()
   assert(!move_tween.connect('tween_all_completed', self, '_move_completed'))
+  assert(!Globals.connect('undo_move', self, '_undo_move'))
   add_child(move_tween)
   self.moves = 0
 
@@ -150,22 +154,16 @@ func player_move(dir:int):
   # check if box is in the way
   var box = get_box(newPos)
   if box:
-    var oldP = box.positions
     if !box_move(box, dir):
+      Globals.emit_signal('history_changed', move_history.size())
       move_path.clear()
       return
-    #print('moved box to %s', f)
     # box moved
-    # update nav accordingly. first enable all old positions
-    for p in oldP:
-      nav.set_point_disabled(nav.get_closest_point(p, true), false)
-    # then disble new positions
-    for p in box.positions:
-      nav.set_point_disabled(nav.get_closest_point(p, true), true)
-
     move_tween.interpolate_property(box, 'position', box.transform.origin,
       level.map_to_world(box.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 
+  move_history.push_back(Move.new(dir, box))
+  Globals.emit_signal('history_changed', move_history.size())
   var ease_type = 0
   if move_path.size() == 0:
     # if move is finished, ease out
@@ -184,31 +182,41 @@ func player_move(dir:int):
   was_moving = move_path.size() > 0
   #print('moved to %s facing %d. tile is %d' % [player.pos, dir, level.get_cellv(player.pos)])
 
-func box_move(f:Box, dir:int)->bool:
+func box_move(box:Box, dir:int)->bool:
   # check that all points of the box can move
-  for p in f.positions:
+  for p in box.positions:
     var newPos = p + Globals.DIRS[dir]
     if level.get_cellv(newPos) == TILE_WALL:
       return false
     if background.get_cellv(newPos) == -1:
       return false
     var other = get_box(newPos)
-    if other && other != f:
+    if other && other != box:
       return false
 
   # if box is on target, remove it
-  if targets.has(f.pos):
-    targets[f.pos].target_box = null
+  if targets.has(box.pos):
+    targets[box.pos].target_box = null
+
+  # before move, remember positions
+  var oldP = box.positions
 
   # move box
-  f.pos += Globals.DIRS[dir]
+  box.pos += Globals.DIRS[dir]
   self.moves += 1
 
+  # update nav accordingly. first enable all old positions
+  for p in oldP:
+    nav.set_point_disabled(nav.get_closest_point(p, true), false)
+  # then disble new positions
+  for p in box.positions:
+    nav.set_point_disabled(nav.get_closest_point(p, true), true)
+
   # check if box was moved on target
-  if targets.has(f.pos):
-    var t:Box = targets[f.pos]
-    if t.dim == f.dim:
-      t.target_box = f
+  if targets.has(box.pos):
+    var t:Box = targets[box.pos]
+    if t.dim == box.dim:
+      t.target_box = box
 
   # check if all targets covered
   for t in targets.values():
@@ -219,13 +227,34 @@ func box_move(f:Box, dir:int)->bool:
   level_complete = true
   return true
 
+func _undo_move()->void:
+  if move_history.size() == 0 || level_complete || player_is_moving():
+    return
+  var last:Move = move_history.pop_back()
+  Globals.emit_signal('history_changed', move_history.size())
+  var dir = (last.dir + 2) % 4
+  player.set_dir(last.dir)
+  var pos = player.pos + Gobals.DIRS[dir]
+  player.move_to(pos)
+  # move box also back if needed
+  if last.box:
+    assert(box_move(last.box, dir), 'undo box move must always be possible')
+    move_tween.interpolate_property(last.box, 'position', last.box.transform.origin,
+      level.map_to_world(last.box.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+
+  move_tween.interpolate_property(player, 'position',
+    player.transform.origin, grid2cart(pos),
+    0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+  move_tween.start()
+  was_moving = false
+
 func _move_completed()->void:
   if level_complete:
     Globals.emit_signal('level_complete', moves)
   else:
     next_move()
 
-func _input(event:InputEvent)->void:
+func _unhandled_input(event:InputEvent)->void:
   if event.is_action_pressed('move_up'):
     fast_travel = false
     player_move(0)
@@ -238,6 +267,8 @@ func _input(event:InputEvent)->void:
   if event.is_action_pressed('move_left'):
     fast_travel = false
     player_move(3)
+  if event.is_action_pressed('ui_undo'):
+    _undo_move()
   if event is InputEventMouseButton:
     if event.pressed:
       var pos = get_local_mouse_position()
@@ -299,3 +330,14 @@ class Box extends Sprite:
 
   func _to_string() -> String:
     return '%s %s' % [name, pos]
+
+
+class Move:
+  ## direction of the move
+  var dir:int
+  ## moved box
+  var box:Box
+
+  func _init(dir:int, box:Box = null):
+    self.dir = dir
+    self.box = box
