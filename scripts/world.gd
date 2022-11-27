@@ -64,14 +64,9 @@ func generate_sprites():
     if id != TILE_WALL && name != 'carpet':
       level.set_cellv(pos, -1)
       var s = Box.new(pos, name)
-      s.texture = ts.tile_get_texture(id)
-      s.centered = false
-      s.region_enabled = true
-      s.region_rect = ts.tile_get_region(id)
-      s.offset = ts.tile_get_texture_offset(id) - Vector2(96, 0)
-      s.transform.origin = level.map_to_world(pos)
-      s.z_index = ts.tile_get_z_index(id)
-      level.add_child(s)
+      add_child(s)
+      s.generate_sprites(ts, id)
+      s.transform.origin = grid2cart(pos)
       if s.is_target:
         targets[s.pos] = s
       else:
@@ -160,7 +155,7 @@ func player_move(dir:int):
       return
     # box moved
     move_tween.interpolate_property(box, 'position', box.transform.origin,
-      level.map_to_world(box.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+      grid2cart(box.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 
   move_history.push_back(Move.new(dir, box))
   Globals.emit_signal('history_changed', move_history.size())
@@ -240,7 +235,7 @@ func _undo_move()->void:
   if last.box:
     assert(box_move(last.box, dir), 'undo box move must always be possible')
     move_tween.interpolate_property(last.box, 'position', last.box.transform.origin,
-      level.map_to_world(last.box.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+      grid2cart(last.box.pos), 0.4, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 
   move_tween.interpolate_property(player, 'position',
     player.transform.origin, grid2cart(pos),
@@ -278,7 +273,7 @@ func _unhandled_input(event:InputEvent)->void:
 
 ## converts the grid coordinates to world coordinates
 func grid2cart(pos:Vector2)->Vector2:
-  return level.map_to_world(pos)
+  return level.map_to_world(pos) + Vector2(0, 112)
 
 func get_box(pos:Vector2)->Box:
   for f in boxes:
@@ -290,7 +285,9 @@ func set_moves(m:int):
   moves = m
   Globals.emit_signal('moves_changed', moves)
 
-class Box extends Sprite:
+## The Boxes are anchored at the bottom most tile.
+## so a 1x2 spans 0,0 and 0,1 where as a 2x1 spans 0,0 and -1,0
+class Box extends YSort:
   ## position in tilemap
   var pos:Vector2 setget set_pos
 
@@ -315,8 +312,13 @@ class Box extends Sprite:
       dim = Vector2(2, 1)
     elif name.ends_with('2x2'):
       dim = Vector2(2, 2)
+    elif name.ends_with('1x3'):
+      dim = Vector2(1, 3)
+    elif name.ends_with('3x1'):
+      dim = Vector2(3, 1)
     is_target = name.begins_with('target')
     self.pos = p
+
 
   func covers(p:Vector2)->bool:
     return positions.find(p) != -1
@@ -331,6 +333,66 @@ class Box extends Sprite:
   func _to_string() -> String:
     return '%s %s' % [name, pos]
 
+  ## generates the sprites from the ginve tileset tile. since some of the tiles have a texture wider
+  ## than an isometric tile, the y-sort would produce errors when then player is in-fornt of a part
+  ## of the texture that is behind. in order to fix this, the texture is split into several
+  ## vertical strips, so that each sprite covers only 1 tile
+  ##  2x1         1x2         2x2
+  ##      ╳           ╳           ╳
+  ##     ╱ ╲         ╱ ╲         ╱ ╲
+  ##    ╳   ╳       ╳   ╳       ╳ ▒ ╳
+  ##   ╱ ╲ ╱ ╲     ╱ ╲ ╱ ╲     ╱ ╲ ╱ ╲
+  ##  ╳ █ ╳   ╳   ╳   ╳ ▒ ╳   ╳ █ ╳ ▓ ╳
+  ##   ╲ ╱ ╲ ╱     ╲ ╱ ╲ ╱     ╲ ╱ ╲ ╱
+  ##    ╳ ▒ ╳       ╳ █ ╳       ╳ ▒ ╳
+  ##     ╲ ╱         ╲ ╱         ╲ ╱
+  ##      ╳           ╳           ╳
+  func generate_sprites(ts:TileSet, id:int)->void:
+    var slices = []
+    var r:Rect2 = ts.tile_get_region(id);
+    # for 1x1 we only need 1 sprite
+    if dim == Vector2(1,1):
+      slices = [
+        {dx=0,  dy= 0, tx= 0, w=r.size.x, h=r.size.y},
+      ]
+    elif dim == Vector2(2,1):
+      slices = [
+        {dx=0,  dy= 0, tx= 0, w=96, h=r.size.y - 56},
+        {dx=96, dy=56, tx=96, w=r.size.x - 96, h=r.size.y},
+      ]
+    elif dim == Vector2(3,1):
+      slices = [
+        {dx=0,  dy= 0, tx= 0, w=96, h=r.size.y - 112},
+        {dx=96,  dy=56, tx= 96, w=96, h=r.size.y - 56},
+        {dx=192, dy=112, tx=192, w=r.size.x - 192, h=r.size.y},
+      ]
+    elif dim == Vector2(1,2):
+      slices = [
+        {dx=0,  dy= 0,  tx= 0, w=96, h=r.size.y},
+        {dx=96, dy=-56, tx=96, w=r.size.x - 96, h=r.size.y},
+      ]
+    elif dim == Vector2(1,3):
+      slices = [
+        {dx=0,  dy= 0,  tx= 0, w=96, h=r.size.y},
+        {dx=96, dy=-56, tx=96, w=96, h=r.size.y},
+        {dx=192, dy=-112, tx=192, w=r.size.x - 192, h=r.size.y},
+      ]
+    elif dim == Vector2(2,2):
+      slices = [
+        {dx=0,  dy= 0, tx= 0,  w=96,  h=r.size.y - 56},
+        {dx=96,  dy= 56, tx=96, w=96, h=r.size.y},
+        {dx=192, dy=0, tx=192, w=r.size.x - 192, h=r.size.y},
+      ]
+    for p in slices:
+      var s:Sprite = Sprite.new()
+      s.texture = ts.tile_get_texture(id)
+      s.centered = false
+      s.region_enabled = true
+      s.region_rect = Rect2(r.position.x + p.tx, r.position.y, p.w, p.h)
+      s.offset = ts.tile_get_texture_offset(id) - Vector2(96, 112 + p.dy)
+      s.z_index = ts.tile_get_z_index(id)
+      s.transform.origin = Vector2(p.dx, p.dy)
+      add_child(s)
 
 class Move:
   ## direction of the move

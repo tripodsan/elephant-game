@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://levels/level0.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/hud.gd" type="Script" id=2]
@@ -16,6 +16,9 @@
 [ext_resource path="res://assets/ui/undo-hov.png" type="Texture" id=14]
 [ext_resource path="res://assets/ui/undo-dis.png" type="Texture" id=15]
 [ext_resource path="res://assets/ui/undo-def.png" type="Texture" id=16]
+[ext_resource path="res://assets/flowers_outline.png" type="Texture" id=17]
+[ext_resource path="res://assets/flowers_solid.png" type="Texture" id=18]
+[ext_resource path="res://assets/title_gfx.png" type="Texture" id=19]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -134,6 +137,42 @@ margin_right = 1360.0
 margin_bottom = 990.0
 theme = ExtResource( 5 )
 text = "Level 1	"
+
+[node name="title" type="Control" parent="canvas"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="canvas/title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0.207843, 0.211765, 1 )
+
+[node name="TextureRect" type="TextureRect" parent="canvas/title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 17 )
+expand = true
+stretch_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="canvas/title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 18 )
+expand = true
+stretch_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="canvas/title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 1, 1, 1, 0.227451 )
+
+[node name="TextureRect3" type="TextureRect" parent="canvas/title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 19 )
+expand = true
+stretch_mode = 6
 
 [node name="levelComplete" type="Control" parent="canvas"]
 visible = false
