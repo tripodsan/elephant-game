@@ -10,10 +10,18 @@ onready var background:TileMap = $background1
 onready var player:Player = $player
 
 const TILE_WALL = 11
+const TILE_FLOOR = 12
+const TILE_PATH = 50
 
 var boxes:Array = []
 
 var targets = {}
+
+## current selected box
+var selected:Box
+
+## direction of selected box
+var selected_dir:int
 
 ## navigation class
 var nav:AStar2D
@@ -27,6 +35,9 @@ var fast_travel:bool = false
 
 ## the current move path
 var move_path:Array = []
+
+## the selected highlight_path
+var highlight_path:Array = []
 
 ## the move history
 ## @type Array<Move>
@@ -110,18 +121,17 @@ func player_is_moving()->bool:
   return move_tween.is_active()
 
 ## create move path for player to the desired location.
-func player_movev(pos:Vector2):
+func click(pos:Vector2):
   if level_complete:
     return
   if player_is_moving():
     return
-  var dir = Globals.DIRS.find(pos - player.pos)
-  if dir >= 0:
-    # move by 1
+  if selected:
     move_path.clear()
     fast_travel = false
-    player_move(dir)
+    player_move(selected_dir)
     return
+
   var p0 = nav.get_closest_point(player.pos)
   var p1 = nav.get_closest_point(pos)
   move_path = nav.get_point_path(p0, p1)
@@ -135,6 +145,7 @@ func player_move(dir:int):
   if player_is_moving():
     # next_move = dir
     return
+
   player.set_dir(dir)
   var newPos = player.pos + Gobals.DIRS[dir]
   # check if background is not empty
@@ -175,9 +186,10 @@ func player_move(dir:int):
 
   move_tween.start()
   was_moving = move_path.size() > 0
-  #print('moved to %s facing %d. tile is %d' % [player.pos, dir, level.get_cellv(player.pos)])
+  # ensure hover is cleared
+  hover(Vector2.ZERO, [])
 
-func box_move(box:Box, dir:int)->bool:
+func box_can_move(box:Box, dir:int)->bool:
   # check that all points of the box can move
   for p in box.positions:
     var newPos = p + Globals.DIRS[dir]
@@ -188,6 +200,11 @@ func box_move(box:Box, dir:int)->bool:
     var other = get_box(newPos)
     if other && other != box:
       return false
+  return true
+
+func box_move(box:Box, dir:int)->bool:
+  if !box_can_move(box, dir):
+    return false
 
   # if box is on target, remove it
   if targets.has(box.pos):
@@ -249,6 +266,63 @@ func _move_completed()->void:
   else:
     next_move()
 
+
+## pixk the box that can be moved by the player
+func pick_movable_box(boxes:Array):
+  for box in boxes:
+    var dir = -1
+    for p in box.positions:
+      dir = Globals.DIRS.find(p - player.pos)
+      if dir >= 0 && box_can_move(box, dir):
+        return { box=box, dir=dir }
+  return null
+
+## handles hover for the given tile coords and hovered box
+## @param {Vector2} pos tile position the mouse hovers over
+## @param {Array<Box} box the hovered box
+func hover(pos:Vector2, boxes:Array)->void:
+  # only allow hovering over boxes that might be moved
+  var info = pick_movable_box(boxes)
+  var box = info.box if info else null
+  if box != selected:
+    if selected:
+      selected.modulate = Color.white
+      selected.scale = Vector2(1, 1)
+    selected = box
+    selected_dir = info.dir if info else -1
+  if selected:
+    selected.modulate = Color(1.2, 1.2, 1.2)
+    selected.scale = Vector2(1.01, 1.01)
+    show_path([])
+    return
+
+  var id = background.get_cellv(pos)
+  if id != TILE_FLOOR && id != TILE_PATH:
+    show_path([])
+    return
+  if get_box(pos):
+    show_path([])
+    return
+
+  if player.pos != pos:
+    var p0 = nav.get_closest_point(player.pos)
+    var p1 = nav.get_closest_point(pos)
+    show_path(nav.get_point_path(p0, p1))
+  else:
+    show_path([])
+
+func show_path(np:Array):
+  var l0 = np.size();
+  var l1 = highlight_path.size()
+  if l0 == l1 && l0 > 1 && np[0] == highlight_path[0] && np[l0-1] == highlight_path[l1-1]:
+    return
+  for pos in highlight_path:
+      background.set_cellv(pos, TILE_FLOOR)
+  for pos in np:
+      background.set_cellv(pos, TILE_PATH)
+  highlight_path = np
+
+
 func _unhandled_input(event:InputEvent)->void:
   if event.is_action_pressed('move_up'):
     fast_travel = false
@@ -268,8 +342,18 @@ func _unhandled_input(event:InputEvent)->void:
     if event.pressed:
       var pos = get_local_mouse_position()
       var tile:Vector2 = level.world_to_map(pos)
-      player_movev(tile)
-
+      click(tile)
+  if event is InputEventMouseMotion:
+    if player_is_moving():
+      return
+    var mousePos = get_global_mouse_position()
+    var space = get_world_2d().direct_space_state
+    var boxes = []
+    for info in space.intersect_point(mousePos, 8, [], -1, false, true):
+      boxes.push_back(info.collider.get_parent())
+    var pos = get_local_mouse_position()
+    var tile:Vector2 = level.world_to_map(pos)
+    hover(tile, boxes)
 
 ## converts the grid coordinates to world coordinates
 func grid2cart(pos:Vector2)->Vector2:
@@ -350,6 +434,8 @@ class Box extends YSort:
   func generate_sprites(ts:TileSet, id:int)->void:
     var slices = []
     var r:Rect2 = ts.tile_get_region(id);
+    var t:Texture = ts.tile_get_texture(id);
+    var o:Vector2 = ts.tile_get_texture_offset(id) - Vector2(96, 112)
     # for 1x1 we only need 1 sprite
     if dim == Vector2(1,1):
       slices = [
@@ -385,14 +471,33 @@ class Box extends YSort:
       ]
     for p in slices:
       var s:Sprite = Sprite.new()
-      s.texture = ts.tile_get_texture(id)
+      s.texture = t;
       s.centered = false
       s.region_enabled = true
       s.region_rect = Rect2(r.position.x + p.tx, r.position.y, p.w, p.h)
-      s.offset = ts.tile_get_texture_offset(id) - Vector2(96, 112 + p.dy)
+      s.offset = o - Vector2(0, p.dy)
       s.z_index = ts.tile_get_z_index(id)
       s.transform.origin = Vector2(p.dx, p.dy)
       add_child(s)
+
+    # create collision polygons from the sprite texture for non targets
+    if is_target:
+      return
+    var area := Area2D.new()
+    add_child(area)
+    var img := Image.new()
+    img.create(r.size.x, r.size.y, false, Image.FORMAT_RGBA8)
+    img.blit_rect(t.get_data(), r, Vector2.ZERO)
+    var bitmap = BitMap.new()
+    bitmap.create_from_image_alpha(img)
+    var polys = bitmap.opaque_to_polygons(Rect2(Vector2.ZERO, img.get_size()))
+    for poly in polys:
+      var p = CollisionPolygon2D.new()
+      #p.color = Color.from_hsv(rand_range(0, 1), 1, 1)
+      #p.z_index = 2
+      p.polygon = poly
+      p.position = o
+      area.add_child(p)
 
 class Move:
   ## direction of the move
