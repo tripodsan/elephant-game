@@ -89,7 +89,10 @@ func generate_nav():
   # create the nav map with all the background cells that are not covered by a wall
   var points = {}
   for pos in background.get_used_cells():
-    var id = level.get_cellv(pos)
+    var id = background.get_cellv(pos)
+    if id != TILE_FLOOR && id != TILE_PATH:
+      continue
+    id = level.get_cellv(pos)
     if id != TILE_WALL:
       var pId = nav.get_available_point_id()
       points[pos] = pId
@@ -130,6 +133,16 @@ func click(pos:Vector2):
     move_path.clear()
     fast_travel = false
     player_move(selected_dir)
+    return
+  var id = background.get_cellv(pos)
+  if id != TILE_FLOOR && id != TILE_PATH:
+    return
+
+  var dir = Globals.DIRS.find(pos - player.pos)
+  if dir >= 0:
+    move_path.clear()
+    fast_travel = false
+    player_move(dir)
     return
 
   var p0 = nav.get_closest_point(player.pos)
@@ -338,6 +351,8 @@ func _unhandled_input(event:InputEvent)->void:
     player_move(3)
   if event.is_action_pressed('ui_undo'):
     _undo_move()
+  if event.is_action_pressed('ui_restart'):
+    Globals.emit_signal('level_restart');
   if event is InputEventMouseButton:
     if event.pressed:
       var pos = get_local_mouse_position()
