@@ -66,6 +66,7 @@ func _on_btnRestart_pressed() -> void:
 func _level_complete(moves:int):
   screenLevelCompete.visible = true
   screenLevelCompete.grab_focus()
+  $canvas/levelComplete/CenterContainer/VBoxContainer/labMoves.text = "%d Moves" % moves
   soundTrackAnim.play('mute')
 
 func _on_btnNext_pressed() -> void:

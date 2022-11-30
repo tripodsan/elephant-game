@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://themes/title_label.tres" type="Theme" id=1]
 [ext_resource path="res://scripts/hud.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://assets/SpicyRice-23Mo.ttf" type="DynamicFontData" id=20]
 [ext_resource path="res://themes/menu_button.tres" type="Theme" id=21]
 [ext_resource path="res://sounds/gamesoundtrack.mp3" type="AudioStream" id=22]
+[ext_resource path="res://levels/level2.tscn" type="PackedScene" id=23]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -579,7 +580,7 @@ script = SubResource( 3 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color( 1, 1, 1, 0.27451 )
+color = Color( 0, 0, 0, 0.658824 )
 
 [node name="CenterContainer" type="CenterContainer" parent="canvas/levelComplete"]
 anchor_right = 1.0
@@ -587,29 +588,41 @@ anchor_bottom = 1.0
 mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="canvas/levelComplete/CenterContainer"]
-margin_left = 762.0
-margin_top = 427.0
-margin_right = 1157.0
-margin_bottom = 653.0
+margin_left = 765.0
+margin_top = 376.0
+margin_right = 1155.0
+margin_bottom = 703.0
 custom_constants/separation = 17
 
-[node name="Label" type="Label" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
-margin_right = 395.0
+[node name="labTitle" type="Label" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+margin_right = 390.0
 margin_bottom = 84.0
 theme = ExtResource( 5 )
 custom_colors/font_color = Color( 0.972549, 1, 0.470588, 1 )
-text = "Level Complete!"
+text = "Level solved!"
+align = 1
+
+[node name="labMoves" type="Label" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+margin_top = 101.0
+margin_right = 390.0
+margin_bottom = 185.0
+theme = ExtResource( 5 )
+custom_colors/font_color = Color( 0.972549, 1, 0.470588, 1 )
+text = "23 Moves"
+align = 1
 
 [node name="btnNext" type="Button" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
-margin_left = 2.0
-margin_top = 101.0
-margin_right = 392.0
-margin_bottom = 226.0
+margin_top = 202.0
+margin_right = 390.0
+margin_bottom = 327.0
 size_flags_horizontal = 4
 theme = ExtResource( 21 )
+custom_colors/font_color = Color( 0.909804, 0.737255, 0.0509804, 1 )
 text = "Next Level"
 
 [node name="board" type="Node2D" parent="."]
+
+[node name="level2" parent="board" instance=ExtResource( 23 )]
 
 [node name="soundTrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 22 )
