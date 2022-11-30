@@ -353,6 +353,8 @@ func _unhandled_input(event:InputEvent)->void:
     _undo_move()
   if event.is_action_pressed('ui_restart'):
     Globals.emit_signal('level_restart');
+  if event.is_action_pressed('ui_menu'):
+    Globals.emit_signal('back_to_title');
   if event is InputEventMouseButton:
     if event.pressed:
       var pos = get_local_mouse_position()

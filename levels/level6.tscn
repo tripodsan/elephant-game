@@ -10,6 +10,7 @@ script = ExtResource( 1 )
 par = 19
 
 [node name="world" type="YSort" parent="."]
+position = Vector2( 252, 159 )
 script = ExtResource( 4 )
 
 [node name="background1" type="TileMap" parent="world"]

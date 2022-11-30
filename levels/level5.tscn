@@ -5,11 +5,12 @@
 [ext_resource path="res://player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/world.gd" type="Script" id=4]
 
-[node name="level1" type="Node2D"]
+[node name="level5" type="Node2D"]
 script = ExtResource( 1 )
 par = 15
 
 [node name="world" type="YSort" parent="."]
+position = Vector2( 240, 68 )
 script = ExtResource( 4 )
 
 [node name="background1" type="TileMap" parent="world"]

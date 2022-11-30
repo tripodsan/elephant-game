@@ -390,16 +390,16 @@ anchor_bottom = 1.0
 
 [node name="CenterContainer" type="CenterContainer" parent="canvas/credits/MarginContainer"]
 margin_right = 1920.0
-margin_bottom = 897.0
+margin_bottom = 1025.0
 size_flags_vertical = 0
 
 [node name="rows" type="VBoxContainer" parent="canvas/credits/MarginContainer/CenterContainer"]
-margin_left = 495.0
-margin_right = 1424.0
-margin_bottom = 897.0
+margin_left = 365.0
+margin_right = 1555.0
+margin_bottom = 1025.0
 
 [node name="Label" type="Label" parent="canvas/credits/MarginContainer/CenterContainer/rows"]
-margin_right = 929.0
+margin_right = 1190.0
 margin_bottom = 208.0
 theme = ExtResource( 21 )
 custom_colors/font_color = Color( 0.88, 0.81576, 0.2376, 1 )
@@ -409,39 +409,41 @@ align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="canvas/credits/MarginContainer/CenterContainer/rows"]
 margin_top = 212.0
-margin_right = 929.0
-margin_bottom = 593.0
+margin_right = 1190.0
+margin_bottom = 721.0
 alignment = 1
 
 [node name="Label" type="Label" parent="canvas/credits/MarginContainer/CenterContainer/rows/HBoxContainer"]
 margin_right = 373.0
-margin_bottom = 381.0
+margin_bottom = 509.0
 theme = ExtResource( 21 )
 custom_colors/font_color = Color( 0.788235, 0.647059, 0.00784314, 0.768627 )
 text = "Code:
 Graphics:
-Sound:"
+Sound:
+Font:"
 align = 2
 
 [node name="Label2" type="Label" parent="canvas/credits/MarginContainer/CenterContainer/rows/HBoxContainer"]
 margin_left = 377.0
-margin_right = 929.0
-margin_bottom = 381.0
+margin_right = 1190.0
+margin_bottom = 509.0
 theme = ExtResource( 1 )
 text = "  tripod
   nishi & tripod
-  wompking"
+  wompking
+  Brian J. Bonislawsky"
 
 [node name="Container" type="CenterContainer" parent="canvas/credits/MarginContainer/CenterContainer/rows"]
-margin_top = 597.0
-margin_right = 929.0
-margin_bottom = 897.0
+margin_top = 725.0
+margin_right = 1190.0
+margin_bottom = 1025.0
 rect_min_size = Vector2( 0, 300 )
 
 [node name="Button4" type="Label" parent="canvas/credits/MarginContainer/CenterContainer/rows/Container"]
-margin_left = 229.0
+margin_left = 360.0
 margin_top = 87.0
-margin_right = 699.0
+margin_right = 830.0
 margin_bottom = 212.0
 size_flags_vertical = 0
 theme = ExtResource( 21 )
@@ -449,9 +451,9 @@ text = "Back to Title"
 align = 1
 
 [node name="btnBack" type="Button" parent="canvas/credits/MarginContainer/CenterContainer/rows/Container"]
-margin_left = 229.0
+margin_left = 360.0
 margin_top = 87.0
-margin_right = 699.0
+margin_right = 830.0
 margin_bottom = 212.0
 theme = ExtResource( 21 )
 text = "Back to Title"
@@ -494,13 +496,13 @@ anchor_bottom = 1.0
 
 [node name="CenterContainer" type="CenterContainer" parent="canvas/settings/MarginContainer"]
 margin_right = 1920.0
-margin_bottom = 1025.0
+margin_bottom = 1153.0
 size_flags_vertical = 0
 
 [node name="rows" type="VBoxContainer" parent="canvas/settings/MarginContainer/CenterContainer"]
 margin_left = 400.0
 margin_right = 1520.0
-margin_bottom = 1025.0
+margin_bottom = 1153.0
 
 [node name="Label" type="Label" parent="canvas/settings/MarginContainer/CenterContainer/rows"]
 margin_right = 1120.0
@@ -514,35 +516,37 @@ align = 1
 [node name="HBoxContainer" type="HBoxContainer" parent="canvas/settings/MarginContainer/CenterContainer/rows"]
 margin_top = 212.0
 margin_right = 1120.0
-margin_bottom = 721.0
+margin_bottom = 849.0
 alignment = 1
 
 [node name="Label" type="Label" parent="canvas/settings/MarginContainer/CenterContainer/rows/HBoxContainer"]
-margin_left = 115.0
-margin_right = 433.0
-margin_bottom = 509.0
+margin_left = 21.0
+margin_right = 528.0
+margin_bottom = 637.0
 theme = ExtResource( 21 )
 custom_colors/font_color = Color( 0.788235, 0.647059, 0.00784314, 0.768627 )
 text = "move:
 
 undo:
-restart:"
+restart level:
+back to title:"
 align = 2
 
 [node name="Label2" type="Label" parent="canvas/settings/MarginContainer/CenterContainer/rows/HBoxContainer"]
-margin_left = 437.0
-margin_right = 1004.0
-margin_bottom = 509.0
+margin_left = 532.0
+margin_right = 1099.0
+margin_bottom = 637.0
 theme = ExtResource( 1 )
 text = "  wasd / arrows
   mouse
   Z
-  R"
+  R
+  Q"
 
 [node name="Container" type="CenterContainer" parent="canvas/settings/MarginContainer/CenterContainer/rows"]
-margin_top = 725.0
+margin_top = 853.0
 margin_right = 1120.0
-margin_bottom = 1025.0
+margin_bottom = 1153.0
 rect_min_size = Vector2( 0, 300 )
 
 [node name="Button4" type="Label" parent="canvas/settings/MarginContainer/CenterContainer/rows/Container"]

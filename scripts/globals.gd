@@ -14,6 +14,8 @@ signal undo_move()
 
 signal level_restart()
 
+signal back_to_title()
+
 const GRID_DX := 64
 const GRID_DX2 := 32
 const GRID_DY := 32
