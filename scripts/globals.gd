@@ -10,6 +10,8 @@ signal level_loaded(level_nr)
 
 signal level_complete(moves)
 
+signal play_level(num)
+
 signal undo_move()
 
 signal level_restart()

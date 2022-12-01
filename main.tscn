@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://themes/title_label.tres" type="Theme" id=1]
 [ext_resource path="res://scripts/hud.gd" type="Script" id=2]
@@ -23,6 +23,13 @@
 [ext_resource path="res://themes/menu_button.tres" type="Theme" id=21]
 [ext_resource path="res://sounds/gamesoundtrack.mp3" type="AudioStream" id=22]
 [ext_resource path="res://levels/level2.tscn" type="PackedScene" id=23]
+[ext_resource path="res://assets/lilly-left.png" type="Texture" id=24]
+[ext_resource path="res://assets/ui/big-def.png" type="Texture" id=25]
+[ext_resource path="res://assets/ui/big-hov.png" type="Texture" id=26]
+[ext_resource path="res://assets/ui/big-dis.png" type="Texture" id=27]
+[ext_resource path="res://assets/ui/big-pres.png" type="Texture" id=28]
+[ext_resource path="res://stars.tscn" type="PackedScene" id=29]
+[ext_resource path="res://level_button.tscn" type="PackedScene" id=30]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -74,6 +81,55 @@ func on_focus_entered():
   $CenterContainer/VBoxContainer/btnNext.grab_focus()
 "
 
+[sub_resource type="StyleBoxEmpty" id=15]
+
+[sub_resource type="DynamicFont" id=9]
+size = 100
+outline_size = 6
+outline_color = Color( 0.380392, 0.0784314, 0.0901961, 1 )
+use_filter = true
+font_data = ExtResource( 20 )
+
+[sub_resource type="StyleBoxTexture" id=10]
+texture = ExtResource( 26 )
+region_rect = Rect2( 0, 0, 106, 105 )
+margin_left = 35.0
+margin_right = 35.0
+margin_top = 10.0
+margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id=11]
+texture = ExtResource( 28 )
+region_rect = Rect2( 0, 0, 103, 102 )
+margin_left = 35.0
+margin_right = 35.0
+margin_top = 10.0
+margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id=12]
+texture = ExtResource( 25 )
+region_rect = Rect2( 0, 0, 105, 105 )
+margin_left = 35.0
+margin_right = 35.0
+margin_top = 10.0
+margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id=13]
+texture = ExtResource( 27 )
+region_rect = Rect2( 0, 0, 105, 105 )
+margin_left = 35.0
+margin_right = 35.0
+margin_top = 10.0
+margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id=14]
+texture = ExtResource( 25 )
+region_rect = Rect2( 0, 0, 105, 105 )
+margin_left = 35.0
+margin_right = 35.0
+margin_top = 10.0
+margin_bottom = 10.0
+
 [sub_resource type="Animation" id=7]
 length = 0.001
 tracks/0/type = "value"
@@ -110,7 +166,6 @@ script = ExtResource( 4 )
 [node name="canvas" type="CanvasLayer" parent="."]
 
 [node name="game_screen" type="Control" parent="canvas"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -459,6 +514,112 @@ margin_bottom = 212.0
 theme = ExtResource( 21 )
 text = "Back to Title"
 
+[node name="level_select" type="Control" parent="canvas"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 1
+
+[node name="ColorRect" type="ColorRect" parent="canvas/level_select"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0.207843, 0.211765, 1 )
+
+[node name="TextureRect" type="TextureRect" parent="canvas/level_select"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 17 )
+expand = true
+stretch_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="canvas/level_select"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 1, 1, 1, 0.317647 )
+
+[node name="MarginContainer" type="MarginContainer" parent="canvas/level_select"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="CenterContainer" parent="canvas/level_select/MarginContainer"]
+margin_right = 1920.0
+margin_bottom = 1067.0
+size_flags_vertical = 0
+
+[node name="rows" type="VBoxContainer" parent="canvas/level_select/MarginContainer/CenterContainer"]
+margin_left = 305.0
+margin_right = 1614.0
+margin_bottom = 1067.0
+
+[node name="Label" type="Label" parent="canvas/level_select/MarginContainer/CenterContainer/rows"]
+margin_right = 1309.0
+margin_bottom = 208.0
+theme = ExtResource( 21 )
+custom_colors/font_color = Color( 0.88, 0.81576, 0.2376, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "Select Level"
+align = 1
+
+[node name="levels" type="GridContainer" parent="canvas/level_select/MarginContainer/CenterContainer/rows"]
+margin_top = 212.0
+margin_right = 1309.0
+margin_bottom = 1067.0
+custom_constants/vseparation = 87
+custom_constants/hseparation = 111
+columns = 4
+
+[node name="level0" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+
+[node name="level1" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 355.0
+margin_right = 599.0
+
+[node name="level2" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 710.0
+margin_right = 954.0
+
+[node name="level3" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 1065.0
+margin_right = 1309.0
+
+[node name="level4" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_top = 314.0
+margin_bottom = 541.0
+
+[node name="level5" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 355.0
+margin_top = 314.0
+margin_right = 599.0
+margin_bottom = 541.0
+
+[node name="level6" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 710.0
+margin_top = 314.0
+margin_right = 954.0
+margin_bottom = 541.0
+
+[node name="level7" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 1065.0
+margin_top = 314.0
+margin_right = 1309.0
+margin_bottom = 541.0
+
+[node name="level8" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_top = 628.0
+margin_bottom = 855.0
+
+[node name="level9" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 355.0
+margin_top = 628.0
+margin_right = 599.0
+margin_bottom = 855.0
+
+[node name="level10" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 710.0
+margin_top = 628.0
+margin_right = 954.0
+margin_bottom = 855.0
+
 [node name="settings" type="Control" parent="canvas"]
 visible = false
 anchor_right = 1.0
@@ -568,6 +729,11 @@ margin_bottom = 212.0
 theme = ExtResource( 21 )
 text = "Back to Title"
 
+[node name="Lilly-left" type="Sprite" parent="canvas/settings"]
+position = Vector2( 1498, 758 )
+scale = Vector2( 0.685624, 0.685624 )
+texture = ExtResource( 24 )
+
 [node name="levelComplete" type="Control" parent="canvas"]
 visible = false
 anchor_right = 1.0
@@ -588,14 +754,14 @@ anchor_bottom = 1.0
 mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="canvas/levelComplete/CenterContainer"]
-margin_left = 765.0
-margin_top = 376.0
-margin_right = 1155.0
-margin_bottom = 703.0
+margin_left = 707.0
+margin_top = 285.0
+margin_right = 1212.0
+margin_bottom = 794.0
 custom_constants/separation = 17
 
 [node name="labTitle" type="Label" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
-margin_right = 390.0
+margin_right = 505.0
 margin_bottom = 84.0
 theme = ExtResource( 5 )
 custom_colors/font_color = Color( 0.972549, 1, 0.470588, 1 )
@@ -604,20 +770,44 @@ align = 1
 
 [node name="labMoves" type="Label" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
 margin_top = 101.0
-margin_right = 390.0
+margin_right = 505.0
 margin_bottom = 185.0
 theme = ExtResource( 5 )
 custom_colors/font_color = Color( 0.972549, 1, 0.470588, 1 )
 text = "23 Moves"
 align = 1
 
-[node name="btnNext" type="Button" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
 margin_top = 202.0
-margin_right = 390.0
-margin_bottom = 327.0
+margin_right = 505.0
+margin_bottom = 266.0
+
+[node name="stars" parent="canvas/levelComplete/CenterContainer/VBoxContainer/CenterContainer" instance=ExtResource( 29 )]
+
+[node name="VSeparator" type="HSeparator" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+margin_top = 283.0
+margin_right = 505.0
+margin_bottom = 333.0
+custom_constants/separation = 50
+custom_styles/separator = SubResource( 15 )
+
+[node name="btnNext" type="Button" parent="canvas/levelComplete/CenterContainer/VBoxContainer"]
+margin_top = 350.0
+margin_right = 505.0
+margin_bottom = 509.0
 size_flags_horizontal = 4
 theme = ExtResource( 21 )
-custom_colors/font_color = Color( 0.909804, 0.737255, 0.0509804, 1 )
+custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
+custom_colors/font_color_focus = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 0.996078, 0.996078, 0.996078, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+custom_fonts/font = SubResource( 9 )
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/disabled = SubResource( 13 )
+custom_styles/normal = SubResource( 14 )
 text = "Next Level"
 
 [node name="board" type="Node2D" parent="."]
