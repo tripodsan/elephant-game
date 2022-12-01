@@ -111,13 +111,14 @@ func _on_btnNext_pressed() -> void:
 func _on_btnUndo_pressed() -> void:
   Globals.emit_signal('undo_move')
 
-func show_screen(scn)->void:
+func show_screen(scn:Control)->void:
   if scn != current_screen:
     if current_screen:
       current_screen.hide()
     current_screen = scn
   scn.show()
-  scn.grab_focus()
+  if scn.focus_mode:
+    scn.grab_focus()
 
 func _on_btnQuit_pressed() -> void:
   get_tree().quit()

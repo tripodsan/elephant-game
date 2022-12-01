@@ -44,7 +44,7 @@ func on_focus_entered():
   $MarginContainer/MarginContainer/buttons/btnPlay.grab_focus();
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=16]
 script/source = "extends Control
 
 # Called when the node enters the scene tree for the first time.
@@ -413,7 +413,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 focus_mode = 1
-script = SubResource( 5 )
+script = SubResource( 16 )
 
 [node name="ColorRect" type="ColorRect" parent="canvas/credits"]
 anchor_right = 1.0
