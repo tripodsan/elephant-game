@@ -620,6 +620,12 @@ margin_top = 628.0
 margin_right = 954.0
 margin_bottom = 855.0
 
+[node name="level11" parent="canvas/level_select/MarginContainer/CenterContainer/rows/levels" instance=ExtResource( 30 )]
+margin_left = 710.0
+margin_top = 628.0
+margin_right = 954.0
+margin_bottom = 855.0
+
 [node name="settings" type="Control" parent="canvas"]
 visible = false
 anchor_right = 1.0

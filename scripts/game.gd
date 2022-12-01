@@ -25,6 +25,7 @@ var level7 = load('res://levels/level7.tscn')
 var level8 = load('res://levels/level8.tscn')
 var level9 = load('res://levels/level9.tscn')
 var level10 = load('res://levels/level10.tscn')
+var level11 = load('res://levels/level11.tscn')
 var level99 = load('res://levels/level99.tscn')
 
 var LEVELS = [
@@ -39,6 +40,7 @@ var LEVELS = [
   level8,
   level9,
   level10,
+  level11,
 #  level99,
 ]
 
